@@ -1,7 +1,7 @@
 # Дана квадратная матрица. Сформировать все возможные варианты данной матрицы путем
 # перестановки строк и столбцов, в которых диагональный элемент равен нулю.
 # + сумма элементов сторки с диагональным элементом равным нулю не должна быть больше размера матрицы уноженного на 5
-# + в случайно сгенерированном матрице должен быть хотя бы 1 нулевой диагональный элемент
+# + переставляем только четные столбцы и строки
 
 
 import random
@@ -49,14 +49,14 @@ def F_rec(matrix, row, column, count, n, exist=[[], []]):
         return
     F_rec(matrix, row + 1, column + 1, count, n)
     if check_2(matrix, row):
-        if matrix[row][row] == 0 and row not in exist[0]:
+        if matrix[row][row] == 0  and row % 2 != 0 and row not in exist[0] :
             exist[0].append(row)
             new_matrix = copy.deepcopy(matrix)
             for i in range(len(matrix)):
                 new_matrix[row][i], new_matrix[i][column] = new_matrix[i][column], new_matrix[row][i]
             print_matrix(new_matrix)
             count[0] += 1
-        if matrix[row][n - row] == 0 and row != len(matrix) // 2 and row not in exist[1]:
+        if matrix[row][n - row] == 0 and row % 2 != 0 and row != len(matrix) // 2 and row not in exist[1]:
             exist[1].append(row)
             new_matrix = copy.deepcopy(matrix)
             for i in range(len(matrix)):
@@ -80,14 +80,14 @@ def F_iter(matrix):
             continue
         stack.append((matrix, row + 1, column + 1))
         if check_2(matrix, row):
-            if matrix[row][row] == 0 and row not in exist[0]:
+            if matrix[row][row] == 0 and row % 2 != 0 and row not in exist[0]:
                 exist[0].append(row)
                 new_matrix = copy.deepcopy(matrix)
                 for i in range(len(matrix)):
                     new_matrix[row][i], new_matrix[i][column] = new_matrix[i][column], new_matrix[row][i]
                 print_matrix(new_matrix)
                 stack.append((matrix, row + 1, column + 1))
-            if matrix[row][k - row] == 0 and row != len(matrix) // 2 and row not in exist[1]:
+            if matrix[row][k - row] == 0 and row % 2 != 0 and row != len(matrix) // 2 and row not in exist[1]:
                 exist[1].append(row)
                 new_matrix = copy.deepcopy(matrix)
                 for i in range(len(matrix)):
@@ -103,10 +103,12 @@ def F_iter(matrix):
 
 
 count = [0]
-n = number_check('Размер матрицы: ')
-if input('Напишить 1 для запуска тестовой матрицы, 2 для случайной: ') == '1':
-    matrix = [[10, 9, 0], [3, 0, 3], [0, 2, 5]]
+
+if input('Напишите 1 для запуска тестовой матрицы или ничего для случайной: ') == '1':
+    matrix = [[1, 0, 1, 0, 1], [1, 0, 1, 0, 0], [1, 0, 0, 1, 1], [1, 0, 0, 1, 0], [1, 0, 0, 1, 0]]
+    n = 3
 else:
+    n = number_check('Размер матрицы: ')
     matrix = check_1(n)
 print('Начальная матрица:')
 print_matrix(matrix)
